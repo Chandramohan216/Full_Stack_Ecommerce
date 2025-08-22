@@ -1,9 +1,9 @@
-name: Deploy to AWS EC2
+name: Deploy
 
 on:
   push:
     branches:
-      - main   # deploy only when main branch is updated
+      - main
 
 jobs:
   deploy:
@@ -21,12 +21,11 @@ jobs:
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2
-  run: |
-    ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-      cd /var/www/project_react || exit
-      git pull origin main
-      npm install
-      npm run build
-      pm2 restart all || true
-    EOF
-
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd /var/www/project_react || exit
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart all || true
+          EOF
