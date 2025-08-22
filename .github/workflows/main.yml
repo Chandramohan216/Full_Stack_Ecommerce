@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy React App to EC2
 
 on:
   push:
@@ -20,13 +20,12 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-  - name: Deploy to EC2
-    run: |
-      ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-      cd /var/www/project_react || exit
-      git pull origin main
-      npm install
-      npm run build
-      pm2 restart project_react || pm2 start npx --name "project_react" -- serve -s build
-    EOF
-
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd /var/www/project_react || exit
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart project_react || pm2 start npx --name "project_react" -- serve -s build
+          EOF
